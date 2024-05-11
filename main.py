@@ -1179,11 +1179,11 @@ class LaTeX2CalcEngine:
             for match in matches:
                 expression = expression.replace("\\begin£" + match + "£{cases}£" + match + "£", "system(")
                 
-            matches = re.findall(r'\&\\enj\£([0-9]+)\£\{cases\}\£\1\£', expression)
+            matches = re.findall(r'&([^\\]*)\\enj\£([0-9]+)\£\{cases\}\£\2\£', expression)
             for match in matches:
-                expression = expression.replace("&\\enj£" + match + "£{cases}£" + match + "£", ")")
+                expression = expression.replace("&" + match[0] + "\\enj£" + match[1] + "£{cases}£" + match[1] + "£", " " + match[0] + ")")
 
-            expression = expression.replace("&\\\\", ",")
+        expression = re.sub(r'&([^\\]*)\\', r' \1,', expression)
         return expression
 
     # OPTIMIZE
@@ -1630,7 +1630,7 @@ def translate(expression, TI_on=True, SC_on=False, constants_on=False, coulomb_o
     # yleisiä suureyhtälökohtia
     addAsterisk = {
         "mv": "m*v",
-        "at": "a*t",
+    #    "at": "a*t",
         "vt": "v*t",
         "mgh": "m*g*h",
         "mg": "m*g",
@@ -1665,13 +1665,13 @@ coulomb_on = False
 
 
 
-#text = input("Latex: ")
-#print(translate(text), "\n")
+text = r"\begin{cases} x=33+3y =&potatoes\\ y=33+22x =&tomatoes \end{cases}"
+print(translate(text), "\n")
 
 
 #print(translate(text, TI_on, SC_on, constants_on, coulomb_on, e_on, i_on, g_on))
 
-
+"""
 
 from pyscript import document
 
@@ -1682,7 +1682,7 @@ def translate_english(event):
     output_div = document.querySelector("#outputArea")
     output_div.innerText = translate(english)
 
-
+"""
 
 
 
